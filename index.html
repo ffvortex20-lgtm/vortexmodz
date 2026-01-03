@@ -32,7 +32,7 @@ input,button{
   width:100%;
   padding:14px;
   margin-top:14px;
-  border-radius:12px;
+  border-radius:14px;
   font-size:1em;
 }
 input{
@@ -49,6 +49,7 @@ button{
   display:none;
   box-shadow:0 0 25px #7b2cff;
 }
+button.show{display:block}
 button:hover{box-shadow:0 0 40px #c77dff}
 </style>
 </head>
@@ -63,42 +64,57 @@ button:hover{box-shadow:0 0 40px #c77dff}
 <input id="canalLink" placeholder="YouTube / TikTok / WhatsApp / Site">
 <input id="downloadLink" placeholder="Link do download">
 
-<button id="gerar" onclick="gerar()">GERAR LINK</button>
+<button id="gerar">GERAR LINK</button>
 </div>
 
 <script>
-const inputs=document.querySelectorAll("input");
-inputs.forEach(i=>i.oninput=()=>{
-  gerar.style.display =
-    titulo.value && canalLink.value && downloadLink.value
-    ? "block" : "none";
-});
+document.addEventListener("DOMContentLoaded",()=>{
 
-function fix(l){
-  return l.startsWith("http://")||l.startsWith("https://")
-    ? l : "https://"+l;
-}
+  const titulo = document.getElementById("titulo");
+  const canalLink = document.getElementById("canalLink");
+  const downloadLink = document.getElementById("downloadLink");
+  const btn = document.getElementById("gerar");
 
-function gerar(){
-  const base=location.origin+
-    location.pathname.substring(0,location.pathname.lastIndexOf("/")+1);
-
-  const url=base+"concluir.html"+
-    "?titulo="+encodeURIComponent(titulo.value)+
-    "&canalLink="+encodeURIComponent(fix(canalLink.value))+
-    "&downloadLink="+encodeURIComponent(fix(downloadLink.value));
-
-  navigator.clipboard.writeText(url);
-  alert("Link copiado!");
-}
-
-particlesJS("particles",{
-  particles:{
-    number:{value:90},
-    color:{value:"#9d4edd"},
-    line_linked:{enable:true,color:"#7b2cff"},
-    move:{enable:true,speed:2}
+  function verificar(){
+    if(titulo.value.trim() && canalLink.value.trim() && downloadLink.value.trim()){
+      btn.classList.add("show");
+    }else{
+      btn.classList.remove("show");
+    }
   }
+
+  titulo.addEventListener("input",verificar);
+  canalLink.addEventListener("input",verificar);
+  downloadLink.addEventListener("input",verificar);
+
+  function fix(link){
+    return link.startsWith("http://")||link.startsWith("https://")
+      ? link : "https://"+link;
+  }
+
+  btn.addEventListener("click",()=>{
+    const base = location.origin +
+      location.pathname.substring(0,location.pathname.lastIndexOf("/")+1);
+
+    const url = base + "concluir.html" +
+      "?titulo=" + encodeURIComponent(titulo.value.trim()) +
+      "&canalLink=" + encodeURIComponent(fix(canalLink.value.trim())) +
+      "&downloadLink=" + encodeURIComponent(fix(downloadLink.value.trim()));
+
+    navigator.clipboard.writeText(url)
+      .then(()=>alert("Link copiado!"))
+      .catch(()=>prompt("Copie o link:",url));
+  });
+
+  particlesJS("particles",{
+    particles:{
+      number:{value:90},
+      color:{value:"#9d4edd"},
+      line_linked:{enable:true,color:"#7b2cff"},
+      move:{enable:true,speed:2}
+    }
+  });
+
 });
 </script>
 </body>
