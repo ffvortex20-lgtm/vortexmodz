@@ -2,131 +2,53 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Vortex Neon</title>
+<title>TESTE BOTÃO</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
 <style>
-:root{color-scheme:dark}
 body{
   margin:0;
-  background:#07000f;
-  font-family:Arial,Helvetica,sans-serif;
+  background:#000;
   color:#fff;
+  font-family:Arial;
 }
-#particles{position:fixed;inset:0}
+
 .container{
-  position:relative;
-  z-index:1;
-  max-width:420px;
-  margin:auto;
-  padding:70px 20px;
+  max-width:400px;
+  margin:50px auto;
+  padding:20px;
   text-align:center;
+  background:#111;
+  border:2px solid red; /* DEBUG */
 }
-h1{
-  font-size:2.4em;
-  color:#c77dff;
-  text-shadow:0 0 25px #9d4edd;
-}
+
 input,button{
   width:100%;
-  padding:14px;
-  margin-top:14px;
-  border-radius:14px;
-  font-size:1em;
+  padding:15px;
+  margin-top:10px;
+  font-size:16px;
 }
-input{
-  background:#14001f;
-  border:1px solid #5a189a;
-  color:#fff;
-}
+
 button{
-  background:#333;
-  color:#888;
+  background:lime;
+  color:#000;
   font-weight:bold;
   border:none;
-  cursor:not-allowed;
-  box-shadow:none;
-  transition:.3s;
-}
-button.active{
-  background:#7b2cff;
-  color:#fff;
-  cursor:pointer;
-  box-shadow:0 0 30px #7b2cff;
-}
-button.active:hover{
-  box-shadow:0 0 45px #c77dff;
 }
 </style>
 </head>
 
 <body>
-<div id="particles"></div>
 
 <div class="container">
-<h1>Vortex Neon</h1>
+  <h1>TESTE</h1>
 
-<input id="titulo" placeholder="Título da tarefa">
-<input id="canalLink" placeholder="YouTube / TikTok / WhatsApp / Site">
-<input id="downloadLink" placeholder="Link do download">
+  <input placeholder="Campo 1">
+  <input placeholder="Campo 2">
+  <input placeholder="Campo 3">
 
-<button id="gerar" disabled>ENVIAR / GERAR LINK</button>
+  <button>BOTÃO APARECE?</button>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded",()=>{
-
-  const titulo = document.getElementById("titulo");
-  const canal = document.getElementById("canalLink");
-  const download = document.getElementById("downloadLink");
-  const btn = document.getElementById("gerar");
-
-  function verificar(){
-    if(titulo.value.trim() && canal.value.trim() && download.value.trim()){
-      btn.disabled = false;
-      btn.classList.add("active");
-    }else{
-      btn.disabled = true;
-      btn.classList.remove("active");
-    }
-  }
-
-  titulo.addEventListener("input",verificar);
-  canal.addEventListener("input",verificar);
-  download.addEventListener("input",verificar);
-
-  function fix(link){
-    return link.startsWith("http://") || link.startsWith("https://")
-      ? link : "https://" + link;
-  }
-
-  btn.addEventListener("click",()=>{
-    if(btn.disabled) return;
-
-    const base = location.origin +
-      location.pathname.substring(0, location.pathname.lastIndexOf("/") + 1);
-
-    const url = base + "concluir.html" +
-      "?titulo=" + encodeURIComponent(titulo.value.trim()) +
-      "&canalLink=" + encodeURIComponent(fix(canal.value.trim())) +
-      "&downloadLink=" + encodeURIComponent(fix(download.value.trim()));
-
-    navigator.clipboard.writeText(url)
-      .then(()=>alert("Link copiado!"))
-      .catch(()=>prompt("Copie o link:", url));
-  });
-
-  particlesJS("particles",{
-    particles:{
-      number:{value:90},
-      color:{value:"#9d4edd"},
-      line_linked:{enable:true,color:"#7b2cff"},
-      move:{enable:true,speed:2}
-    }
-  });
-
-});
-</script>
 </body>
 </html>
