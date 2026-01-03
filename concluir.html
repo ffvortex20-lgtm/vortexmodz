@@ -9,27 +9,28 @@
 <style>
 body{
   margin:0;
-  background:#05000a;
+  background:#07000f;
+  font-family:Arial,Helvetica,sans-serif;
   color:#fff;
-  font-family:Arial;
   text-align:center;
 }
 #particles{position:fixed;inset:0}
 .container{
   position:relative;
   z-index:1;
-  padding:50px 20px;
+  padding:60px 20px;
 }
 h1{
-  color:#b66bff;
-  text-shadow:0 0 20px #9b4dff;
+  color:#c77dff;
+  text-shadow:0 0 25px #9d4edd;
 }
 button,a{
   display:block;
-  margin:15px auto;
+  margin:16px auto;
   padding:14px;
+  width:100%;
   max-width:360px;
-  border-radius:10px;
+  border-radius:12px;
   font-weight:bold;
   text-decoration:none;
   border:none;
@@ -56,15 +57,15 @@ button,a{
 .progress{
   height:8px;
   background:#222;
-  border-radius:5px;
+  border-radius:6px;
   overflow:hidden;
-  margin:20px auto;
+  margin:22px auto;
   max-width:360px;
 }
 #bar{
-  width:0%;
   height:100%;
-  background:#9b4dff;
+  width:0%;
+  background:#9d4edd;
 }
 </style>
 </head>
@@ -73,7 +74,7 @@ button,a{
 <div id="particles"></div>
 
 <div class="container">
-<h1 id="titulo"></h1>
+<h1 id="titulo">Concluir</h1>
 
 <div class="progress"><div id="bar"></div></div>
 
@@ -83,45 +84,60 @@ button,a{
 </div>
 
 <script>
-const p=new URLSearchParams(location.search);
-titulo.textContent=p.get("titulo")||"Concluir";
-const canal=p.get("canal");
-const download=p.get("download");
+const params=new URLSearchParams(location.search);
 
-let t=0;
-const min=10;
+const titulo=params.get("titulo");
+const canalLink=params.get("canalLink");
+const downloadLink=params.get("downloadLink");
+
+if(titulo) document.getElementById("titulo").textContent=titulo;
+
+const bar=document.getElementById("bar");
+const confirmBtn=document.getElementById("confirm");
+const download=document.getElementById("download");
+
+let tempo=0;
+const minimo=10;
 
 function abrir(){
-  if(!canal)return alert("Link inválido");
+  if(!canalLink){
+    alert("Link inválido");
+    return;
+  }
 
-  // Abre APP automaticamente
-  if(canal.includes("youtube")) location.href="vnd.youtube://"+canal.split("://")[1];
-  else if(canal.includes("tiktok")) location.href="tiktok://"+canal.split("://")[1];
-  else if(canal.includes("wa.me")||canal.includes("whatsapp")) location.href="whatsapp://send?text="+canal;
-  else location.href=canal;
+  // abre link (site ou app)
+  location.href=canalLink;
 
-  t=0; bar.style.width="0%";
-  confirm.disabled=true; confirm.classList.remove("active");
+  tempo=0;
+  bar.style.width="0%";
+  confirmBtn.disabled=true;
+  confirmBtn.classList.remove("active");
 
   const timer=setInterval(()=>{
-    t++; bar.style.width=(t/min*100)+"%";
-    if(t>=min){
+    tempo++;
+    bar.style.width=(tempo/minimo*100)+"%";
+    if(tempo>=minimo){
       clearInterval(timer);
-      confirm.disabled=false;
-      confirm.classList.add("active");
+      confirmBtn.disabled=false;
+      confirmBtn.classList.add("active");
+      bar.style.width="100%";
     }
   },1000);
 }
 
 function liberar(){
-  download.href=download;
+  if(!downloadLink){
+    alert("Download inválido");
+    return;
+  }
+  download.href=downloadLink;
   download.style.display="block";
 }
 
 particlesJS("particles",{
   particles:{
-    number:{value:70},
-    color:{value:"#9b4dff"},
+    number:{value:80},
+    color:{value:"#9d4edd"},
     line_linked:{enable:true,color:"#7b2cff"},
     move:{enable:true,speed:2}
   }
