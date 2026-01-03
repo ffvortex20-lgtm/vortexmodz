@@ -41,16 +41,23 @@ input{
   color:#fff;
 }
 button{
-  background:#7b2cff;
-  color:#fff;
+  background:#333;
+  color:#888;
   font-weight:bold;
   border:none;
-  cursor:pointer;
-  display:none;
-  box-shadow:0 0 25px #7b2cff;
+  cursor:not-allowed;
+  box-shadow:none;
+  transition:.3s;
 }
-button.show{display:block}
-button:hover{box-shadow:0 0 40px #c77dff}
+button.active{
+  background:#7b2cff;
+  color:#fff;
+  cursor:pointer;
+  box-shadow:0 0 30px #7b2cff;
+}
+button.active:hover{
+  box-shadow:0 0 45px #c77dff;
+}
 </style>
 </head>
 
@@ -64,46 +71,50 @@ button:hover{box-shadow:0 0 40px #c77dff}
 <input id="canalLink" placeholder="YouTube / TikTok / WhatsApp / Site">
 <input id="downloadLink" placeholder="Link do download">
 
-<button id="gerar">GERAR LINK</button>
+<button id="gerar" disabled>ENVIAR / GERAR LINK</button>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded",()=>{
 
   const titulo = document.getElementById("titulo");
-  const canalLink = document.getElementById("canalLink");
-  const downloadLink = document.getElementById("downloadLink");
+  const canal = document.getElementById("canalLink");
+  const download = document.getElementById("downloadLink");
   const btn = document.getElementById("gerar");
 
   function verificar(){
-    if(titulo.value.trim() && canalLink.value.trim() && downloadLink.value.trim()){
-      btn.classList.add("show");
+    if(titulo.value.trim() && canal.value.trim() && download.value.trim()){
+      btn.disabled = false;
+      btn.classList.add("active");
     }else{
-      btn.classList.remove("show");
+      btn.disabled = true;
+      btn.classList.remove("active");
     }
   }
 
   titulo.addEventListener("input",verificar);
-  canalLink.addEventListener("input",verificar);
-  downloadLink.addEventListener("input",verificar);
+  canal.addEventListener("input",verificar);
+  download.addEventListener("input",verificar);
 
   function fix(link){
-    return link.startsWith("http://")||link.startsWith("https://")
-      ? link : "https://"+link;
+    return link.startsWith("http://") || link.startsWith("https://")
+      ? link : "https://" + link;
   }
 
   btn.addEventListener("click",()=>{
+    if(btn.disabled) return;
+
     const base = location.origin +
-      location.pathname.substring(0,location.pathname.lastIndexOf("/")+1);
+      location.pathname.substring(0, location.pathname.lastIndexOf("/") + 1);
 
     const url = base + "concluir.html" +
       "?titulo=" + encodeURIComponent(titulo.value.trim()) +
-      "&canalLink=" + encodeURIComponent(fix(canalLink.value.trim())) +
-      "&downloadLink=" + encodeURIComponent(fix(downloadLink.value.trim()));
+      "&canalLink=" + encodeURIComponent(fix(canal.value.trim())) +
+      "&downloadLink=" + encodeURIComponent(fix(download.value.trim()));
 
     navigator.clipboard.writeText(url)
       .then(()=>alert("Link copiado!"))
-      .catch(()=>prompt("Copie o link:",url));
+      .catch(()=>prompt("Copie o link:", url));
   });
 
   particlesJS("particles",{
